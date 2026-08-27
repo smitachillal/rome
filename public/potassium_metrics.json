@@ -1,0 +1,266 @@
+{
+  "task": "Potassium breach at next reading (K+ >= 5.5 or < 3.5 mmol/L)",
+  "n_patients": 98,
+  "breach_rate": 0.08163265306122448,
+  "breach_types": {
+    "hypokalaemia": 6,
+    "severe_hypokalaemia": 1,
+    "hyperkalaemia": 1
+  },
+  "feature_sets": {
+    "A. renal only": [
+      "egfr",
+      "creatinine",
+      "ckd_stage_ord",
+      "age"
+    ],
+    "B. renal + K+": [
+      "egfr",
+      "creatinine",
+      "ckd_stage_ord",
+      "age",
+      "k_last",
+      "k_mean",
+      "k_slope",
+      "k_max",
+      "k_min"
+    ],
+    "C. full (+drugs)": [
+      "egfr",
+      "creatinine",
+      "ckd_stage_ord",
+      "age",
+      "k_last",
+      "k_mean",
+      "k_slope",
+      "k_max",
+      "k_min",
+      "n_raising",
+      "n_lowering",
+      "raising_burden",
+      "lowering_burden",
+      "net_k_burden"
+    ]
+  },
+  "results": [
+    {
+      "features": "A. renal only",
+      "model": "Baseline",
+      "accuracy": 0.84,
+      "f1": 0.0,
+      "roc_auc": 0.5,
+      "pr_auc": 0.16
+    },
+    {
+      "features": "A. renal only",
+      "model": "Logistic Regression",
+      "accuracy": 0.76,
+      "f1": 0.0,
+      "roc_auc": 0.3214285714,
+      "pr_auc": 0.1426587302
+    },
+    {
+      "features": "A. renal only",
+      "model": "Random Forest",
+      "accuracy": 0.84,
+      "f1": 0.0,
+      "roc_auc": 0.4047619048,
+      "pr_auc": 0.1477777778
+    },
+    {
+      "features": "A. renal only",
+      "model": "Gradient Boosting",
+      "accuracy": 0.84,
+      "f1": 0.0,
+      "roc_auc": 0.3511904762,
+      "pr_auc": 0.1494444444
+    },
+    {
+      "features": "B. renal + K+",
+      "model": "Baseline",
+      "accuracy": 0.84,
+      "f1": 0.0,
+      "roc_auc": 0.5,
+      "pr_auc": 0.16
+    },
+    {
+      "features": "B. renal + K+",
+      "model": "Logistic Regression",
+      "accuracy": 0.72,
+      "f1": 0.0,
+      "roc_auc": 0.3452380952,
+      "pr_auc": 0.1507323232
+    },
+    {
+      "features": "B. renal + K+",
+      "model": "Random Forest",
+      "accuracy": 0.84,
+      "f1": 0.0,
+      "roc_auc": 0.630952381,
+      "pr_auc": 0.2204365079
+    },
+    {
+      "features": "B. renal + K+",
+      "model": "Gradient Boosting",
+      "accuracy": 0.84,
+      "f1": 0.0,
+      "roc_auc": 0.4166666667,
+      "pr_auc": 0.1708229814
+    },
+    {
+      "features": "C. full (+drugs)",
+      "model": "Baseline",
+      "accuracy": 0.84,
+      "f1": 0.0,
+      "roc_auc": 0.5,
+      "pr_auc": 0.16
+    },
+    {
+      "features": "C. full (+drugs)",
+      "model": "Logistic Regression",
+      "accuracy": 0.72,
+      "f1": 0.0,
+      "roc_auc": 0.3452380952,
+      "pr_auc": 0.1504166667
+    },
+    {
+      "features": "C. full (+drugs)",
+      "model": "Random Forest",
+      "accuracy": 0.84,
+      "f1": 0.0,
+      "roc_auc": 0.5416666667,
+      "pr_auc": 0.2345938375
+    },
+    {
+      "features": "C. full (+drugs)",
+      "model": "Gradient Boosting",
+      "accuracy": 0.84,
+      "f1": 0.0,
+      "roc_auc": 0.4166666667,
+      "pr_auc": 0.1708229814
+    }
+  ],
+  "ablation": {
+    "renal_only_auc": 0.5,
+    "full_auc": 0.5416666666666667,
+    "gain": 0.042
+  },
+  "best": {
+    "model": "Random Forest",
+    "features": "B. renal + K+",
+    "roc_auc": 0.6309523809523809,
+    "pr_auc": 0.22043650793650793,
+    "accuracy": 0.84,
+    "f1": 0.0
+  },
+  "curves_best": {
+    "roc": {
+      "fpr": [
+        0.0,
+        0.048,
+        0.286,
+        0.286,
+        0.333,
+        0.381,
+        0.429,
+        0.524,
+        0.619,
+        1.0
+      ],
+      "tpr": [
+        0.0,
+        0.0,
+        0.0,
+        0.25,
+        0.5,
+        0.5,
+        0.75,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "pr": {
+      "recall": [
+        1.0,
+        1.0,
+        1.0,
+        0.75,
+        0.5,
+        0.5,
+        0.25,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "precision": [
+        0.16,
+        0.235,
+        0.267,
+        0.25,
+        0.2,
+        0.222,
+        0.143,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    }
+  },
+  "confusion_best": [
+    [
+      21,
+      0
+    ],
+    [
+      4,
+      0
+    ]
+  ],
+  "feature_importance": [
+    {
+      "feature": "k_mean",
+      "importance": 0.2273
+    },
+    {
+      "feature": "creatinine",
+      "importance": 0.2259
+    },
+    {
+      "feature": "k_min",
+      "importance": 0.1249
+    },
+    {
+      "feature": "k_last",
+      "importance": 0.1179
+    },
+    {
+      "feature": "age",
+      "importance": 0.0883
+    },
+    {
+      "feature": "egfr",
+      "importance": 0.0735
+    },
+    {
+      "feature": "k_slope",
+      "importance": 0.064
+    },
+    {
+      "feature": "k_max",
+      "importance": 0.0496
+    },
+    {
+      "feature": "ckd_stage_ord",
+      "importance": 0.0287
+    }
+  ]
+}

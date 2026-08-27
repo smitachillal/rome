@@ -1,0 +1,69 @@
+"""SQLite persistence via SQLAlchemy. Local file, no server."""
+from __future__ import annotations
+import os
+from sqlalchemy import create_engine, Integer, String, Float, Date, ForeignKey
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, sessionmaker
+
+DB_URL = os.getenv("DATABASE_URL", "sqlite:///./renal.db")
+engine = create_engine(DB_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(bind=engine, autoflush=False)
+
+
+class Base(DeclarativeBase):
+    pass
+
+
+class Patient(Base):
+    __tablename__ = "patients"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String)
+    age: Mapped[int] = mapped_column(Integer)
+    sex: Mapped[str] = mapped_column(String(1))
+    weight_kg: Mapped[float] = mapped_column(Float,default=0.0,nullable=False)
+    height_cm: Mapped[float] = mapped_column(Float, nullable=True)
+    # KDIGO chronicity: eGFR <60 sustained >=90 days (computed at import)
+    ckd_confirmed: Mapped[int] = mapped_column(Integer, nullable=True)
+    ckd_stage: Mapped[str] = mapped_column(String(4), nullable=True)
+    labs: Mapped[list["Lab"]] = relationship(back_populates="patient",
+                                             cascade="all, delete-orphan")
+    drugs: Mapped[list["Drug"]] = relationship(back_populates="patient",
+                                              cascade="all, delete-orphan")
+
+
+class Lab(Base):
+    __tablename__ = "labs"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    patient_id: Mapped[int] = mapped_column(ForeignKey("patients.id"))
+    measured_on: Mapped["Date"] = mapped_column(Date)
+    # raw input
+    creatinine_mgdl: Mapped[float] = mapped_column(Float, nullable=True)
+    # derived parameters (see app/core/renal_calc.py)
+    egfr: Mapped[float] = mapped_column(Float)
+    crcl: Mapped[float] = mapped_column(Float, nullable=True)
+    aki_stage: Mapped[int] = mapped_column(Integer, nullable=True)
+    ckd_stage: Mapped[str] = mapped_column(String(4), nullable=True)
+    patient: Mapped["Patient"] = relationship(back_populates="labs")
+
+
+class Drug(Base):
+    __tablename__ = "drugs"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    patient_id: Mapped[int] = mapped_column(ForeignKey("patients.id"))
+    ingredient: Mapped[str] = mapped_column(String)
+    patient: Mapped["Patient"] = relationship(back_populates="drugs")
+
+class PrescriptionDrugs(Base):
+    __tablename__ = "prescriptions"
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    subject_id: Mapped[int] = mapped_column(ForeignKey("patients.id"))
+    starttime: Mapped[str] = mapped_column(String)
+    stoptime: Mapped[str] = mapped_column(String)
+    drug_type: Mapped[str] = mapped_column(String)
+    drug: Mapped[str] = mapped_column(String)
+    prod_strength: Mapped[str] = mapped_column(String)
+    dose_val_rx: Mapped[str] = mapped_column(String)
+    dose_unit_rx: Mapped[str] = mapped_column(String)
+    form_unit_disp: Mapped[str] = mapped_column(String)
+    doses_per_24_hrs: Mapped[float] = mapped_column(Float, nullable=True)
+
+   
